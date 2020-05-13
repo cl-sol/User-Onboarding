@@ -56,12 +56,24 @@ const Form = () => {
         setFormState(newFormData);
     }
 
+    const [post, setPost] = useState([]);
+
     const formSubmit = e => {
         e.preventDefault();
         console.log("form submitted");
         axios
             .post("https://reqres.in/api/users", formState)
-            .then(res => console.log(res))
+            .then(res => {
+                //console.log(res)
+                setPost([...post, res.data]);
+                setFormState({
+                    name: "",
+                    email: "",
+                    password: "",
+                    terms:""
+                });
+                console.log("success", post);
+            })
             .catch(err => console.log(err));
     };
 
@@ -92,7 +104,6 @@ const Form = () => {
             {errors.name.length > 0 ? (
                 <p className="error">{errors.name}</p>
             ) : null}
-            
             <label htmlFor = "email">Email:
                 <input
                     id = "email"
@@ -103,6 +114,9 @@ const Form = () => {
                     onChange = {inputChange}
                 />
             </label>
+            {errors.name.length > 0 ? (
+                <p className="error">{errors.email}</p>
+            ) : null}
             <label htmlFor = "password">Password:
                 <input
                     id = "password"
@@ -113,6 +127,9 @@ const Form = () => {
                     onChange = {inputChange}
                 />
             </label>
+            {errors.name.length > 0 ? (
+                <p className="error">{errors.password}</p>
+            ) : null}
             <label htmlFor = "terms">
                 <input
                     id = "terms"
@@ -122,8 +139,11 @@ const Form = () => {
                     onChange = {inputChange}
                 />
             </label>
+            {errors.name.length > 0 ? (
+                <p className="error">{errors.terms}</p>
+            ) : null}
             I agree to the Terms and Conditions
-            <button type = "submit"> Click here to submit!</button>
+            <button type = "submit" disabled = {setButtonDisabled}> Click here to submit!</button>
         </form>
     );
 }
