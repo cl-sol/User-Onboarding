@@ -7,7 +7,7 @@ const Form = () => {
         name: "",
         email: "",
         password: "",
-        terms: ""
+        terms: false
     });
 
     const formSchema = yup.object().shape({
@@ -27,10 +27,10 @@ const Form = () => {
         terms: ""
     });
 
-    const validate = e => {
+    const validate = (e, value) => {
         yup
             .reach(formSchema, e.target.name)
-            .validate(e.target.value)
+            .validate(value)
             .then(valid => {
                 setErrors({
                     ...errors,
@@ -38,21 +38,23 @@ const Form = () => {
                 });
             })
             .catch(err => {
+                console.log(err.errors);
                 setErrors({
                     ...errors,
                     [e.target.name]: err.errors[0]
                 });
             });
     };
-
+    console.log(errors);
     const inputChange = e => {
         e.persist();
+        let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
         let newFormData = {
             ...formState,
             [e.target.name]:
-                e.target.type === "checkbox" ? e.target.checked : e.target.value
+                value
         };
-        validate(e);
+        validate(e, value);
         setFormState(newFormData);
     }
 
@@ -70,19 +72,21 @@ const Form = () => {
                     name: "",
                     email: "",
                     password: "",
-                    terms:""
+                    terms: false
                 });
                 console.log("success", post);
             })
             .catch(err => console.log(err));
     };
 
+    console.log(formState);
+
     const [buttonDisabled, setButtonDisabled] = useState(true);
     useEffect(() => {
         formSchema.isValid(formState)
             .then(valid => {
                 console.log(formState)
-                console.log("valid");
+                // console.log("valid");
                 setButtonDisabled(!valid);
 
         });
@@ -114,7 +118,7 @@ const Form = () => {
                     onChange = {inputChange}
                 />
             </label>
-            {errors.name.length > 0 ? (
+            {errors.email.length > 0 ? (
                 <p className="error">{errors.email}</p>
             ) : null}
             <label htmlFor = "password">Password:
@@ -127,7 +131,7 @@ const Form = () => {
                     onChange = {inputChange}
                 />
             </label>
-            {errors.name.length > 0 ? (
+            {errors.password.length > 0 ? (
                 <p className="error">{errors.password}</p>
             ) : null}
             <label htmlFor = "terms">
@@ -135,15 +139,15 @@ const Form = () => {
                     id = "terms"
                     type = "checkbox"
                     name = "terms"
-                    value = {formState.terms}
+                    checked = {formState.terms}
                     onChange = {inputChange}
                 />
             </label>
-            {errors.name.length > 0 ? (
+            {errors.terms.length > 0 ? (
                 <p className="error">{errors.terms}</p>
             ) : null}
             I agree to the Terms and Conditions
-            <button type = "submit" disabled = {setButtonDisabled}> Click here to submit!</button>
+            <button type = "submit" disabled = {buttonDisabled}> Click here to submit!</button>
         </form>
     );
 }
