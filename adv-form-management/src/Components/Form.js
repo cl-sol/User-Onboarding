@@ -148,6 +148,7 @@ const Form = () => {
             ) : null}
             I agree to the Terms and Conditions
             <button type = "submit" disabled = {buttonDisabled}> Click here to submit!</button>
+            <pre>{JSON.stringify(post, null, 2)}</pre>
         </form>
     );
 }
