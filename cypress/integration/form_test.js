@@ -33,6 +33,14 @@ describe("Testing Form Inputs", () => {
     });
 
     it("Submit form", () => {
+        cy.get('#name')
+        .type("Claudia Sol")
+        cy.get('#email')
+        .type("dada@dada.com")
+        cy.get('#password')
+        .type("dada123@@@")
+        cy.get('#terms')
+        .check()
         cy.get('button')
         .click()
     });
